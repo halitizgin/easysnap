@@ -32,9 +32,10 @@ app.use(async (req, res, next) => {
     if (token && token !== 'null'){
         try{
             const activeUser = await jwt.verify(token, process.env.SECRET_KEY);
-            console.log(activeUser);
+            req.activeUser = activeUser;
+            //console.log(activeUser);
         }catch(e){
-            console.log(e);
+            //console.log(e);
         }
     }
     next();

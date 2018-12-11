@@ -9,6 +9,7 @@ import Header from './Header';
 import Home from './Pages/Home';
 import Login from './Pages/Login';
 import Join from './Pages/Join';
+import SessionWrapper from './SessionWrapper';
 
 const Root = () => (
   <Router>
@@ -24,12 +25,14 @@ const Root = () => (
   </Router>
 );
 
+const RootWithSessionWrapper = SessionWrapper(Root);
+
 class App extends Component {
   render() {
     return (
       <div id="app">
           <div className="container">
-            <Root />
+            <RootWithSessionWrapper />
           </div>
       </div>
     );
