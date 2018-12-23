@@ -19,8 +19,40 @@ export const LOGIN_USER = gql`
 export const GET_ACTIVE_USER = gql`
     query{
         activeUser{
+            id
             username
             createdAt
+            snaps{
+                text
+                createdAt
+            }
+        }
+    }
+`;
+
+export const GET_SNAPS = gql`
+    query{
+        snaps{
+            id
+            text
+            createdAt
+            user{
+                id
+                username
+            }
+        }
+    }
+`;
+
+export const ADD_SNAP = gql`
+    mutation($text: String!, $userId: ID!) {
+        addSnap(data: 
+        { 
+            text: $text, 
+            userId: $userId 
+        }
+        ) {
+            id
         }
     }
 `;

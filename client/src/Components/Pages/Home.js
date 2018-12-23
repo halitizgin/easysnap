@@ -1,7 +1,38 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import { Query, Mutation } from 'react-apollo';
+import { GET_SNAPS, ADD_SNAP } from '../../Queries';
+import TimeAgo from 'react-timeago';
 
 class Home extends Component {
+    state = {
+        text: '',
+        userId: ''
+    }
+
+    onChange = e =>
+    {
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+    }
+
+    componentDidMount(){
+        const { session } = this.props;
+        if (session && session.activeUser)
+        {
+            this.setState({
+                userId: this.props.session.activeUser.id
+            });
+        }
+    }
+
+    onSubmit = (e, addSnap) => {
+        e.preventDefault();
+        addSnap().then(async ({ data }) => console.log(data));
+    }
+
     render() {
+        const { session } = this.props;
         return (
             <div>
                 <div className="description">
@@ -9,33 +40,59 @@ class Home extends Component {
                 </div>
 
                 <div>
-                    <form>
-                        <input className="add-snap__input" type="text" placeholder="add snap" />
-                    </form>
+                    <Mutation mutation={ADD_SNAP} variables={ { ...this.state } }>
+                        {
+                            (addSnap, { loading, error }) => (
+                                <form onSubmit={ e => {
+                                    this.onSubmit(e, addSnap);
+                                } }>
+                                    <input 
+                                    className="add-snap__input" 
+                                    type="text"
+                                    name="text" 
+                                    onChange={this.onChange}
+                                    placeholder={ session && session.activeUser ? "add snap" : "please login" } 
+                                    disabled={ session && session.activeUser ? null : "true" }
+                                    />
+                                </form>
+                            )
+                        }
+                    </Mutation>
+                    
                 </div>
                 <div>
-                    <ul className="snaps">
-                        <li>
-                            <div className="title">Lorem ipsum dolor sit amet</div>
-                            <div className="date">
-                                <span>now</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="title">Curabitur gravida arcu ac tortor dignissim.</div>
-                            <div className="date">
-                                <span>5 minutes ago</span>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="title">Tristique risus nec feugiat in fermentum.</div>
-                            <div className="date">
-                                <span>7 minutes ago</span>
-                            </div>
-                        </li>
-                    </ul>
+                    <Query query={GET_SNAPS}>
+                        {
+                            ({ data, loading, error }) => {
+                                if (loading) return <div className="loading">Loading snaps...</div>
+                                if (error) return <div>Error!</div>
+                                return (
+                                    <Fragment>
+                                        <ul className="snaps">
+                                            {
+                                                data.snaps.map(snap => (
+                                                    <li key={snap.id}>
+                                                        <div className="title">
+                                                        <span className="username">@{ snap.user.username }</span>
+                                                        &nbsp;&nbsp;
+                                                        { snap.text }
+                                                        </div>
+                                                        <div className="date">
+                                                            <span>
+                                                                <TimeAgo date={snap.createdAt} />
+                                                            </span>
+                                                        </div>
+                                                    </li>
+                                                ))
+                                            }
+                                        </ul>
+                                        <div className="counter">{ data.snaps.length } snap(s)</div>
+                                    </Fragment>
+                                )
+                            }
+                        }
+                    </Query>
                 </div>
-                <div className="counter">3 snap(s)</div>
             </div>
         );
     }

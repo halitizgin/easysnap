@@ -5,11 +5,11 @@ import { GET_ACTIVE_USER } from '../Queries';
 const SessionWrapper = Component => props => (
     <Query query={GET_ACTIVE_USER}>
         {
-            ({ data, loading }) => {
+            ({ data, loading, refetch }) => {
                 console.log(data);
                 if (loading) return <div style={ { 'textAlign':'center' } }>Loading...</div>
     
-                return <Component {...props}/>
+                return <Component {...props} refetch={refetch} session={data}/>
             }
         }
     </Query>

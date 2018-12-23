@@ -9,16 +9,18 @@ import Header from './Header';
 import Home from './Pages/Home';
 import Login from './Pages/Login';
 import Join from './Pages/Join';
+import Profile from './Pages/Profile';
 import SessionWrapper from './SessionWrapper';
 
-const Root = () => (
+const Root = ({ refetch, session }) => (
   <Router>
     <Fragment>
-      <Header />
+      <Header session={session} />
       <Switch>
-        <Route path="/" exact component={Home} />
-        <Route path="/login" component={Login} />
-        <Route path="/join" component={Join} />
+        <Route path="/" exact render={ () => <Home session={session} /> }  />
+        <Route path="/login" render={ () => <Login refetch={refetch} />} />
+        <Route path="/join" render={ () => <Join refetch={refetch} />} />
+        <Route path="/profile" render={ () => <Profile activeUser={session.activeUser} session={session} /> } />
         <Redirect to="/" />
       </Switch>
     </Fragment>
