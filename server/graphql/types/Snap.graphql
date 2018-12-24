@@ -21,3 +21,7 @@ input AddSnapInput{
     userId: ID!
     createdAt: Date!
 }
+
+type Subscription {
+    sayi: Int
+}
