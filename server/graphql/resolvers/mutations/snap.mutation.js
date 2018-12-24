@@ -1,5 +1,5 @@
 module.exports = {
-    addSnap: async (parent, { data: { text, userId } }, { Snap, User }) => {
+    addSnap: async (parent, { data: { text, userId, createdAt } }, { Snap, User }) => {
         const user = await User.findById(userId);
 
         if (!user){
@@ -8,7 +8,8 @@ module.exports = {
 
         return await new Snap({
             text,
-            userId
+            userId,
+            createdAt
         }).save();
     }
 };

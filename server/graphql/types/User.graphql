@@ -21,6 +21,7 @@ type Mutation{
 input AddUserInput{
     username: String!
     password: String!
+    createdAt: Date!
 }
 
 input SignInUserInput{

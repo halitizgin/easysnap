@@ -2,7 +2,7 @@ const bcyrpt = require('bcryptjs');
 const token = require('../../../helpers/token');
 
 module.exports = {
-    addUser: async (parent, { data: { username, password } }, { User }) => {
+    addUser: async (parent, { data: { username, password, createdAt } }, { User }) => {
         const user = await User.findOne({ username });
 
         if (user){
@@ -11,7 +11,8 @@ module.exports = {
 
         const newUser = await new User({
             username,
-            password
+            password,
+            createdAt
         }).save();
         return { token: token.generate(newUser, '1h') }
     },

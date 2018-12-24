@@ -8,7 +8,7 @@ const snapSchema = new Schema({
     },
     createdAt: {
         type: Date,
-        default: Date.now()
+        required: true
     },
     userId: {
         type: Schema.ObjectId

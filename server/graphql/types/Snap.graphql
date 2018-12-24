@@ -19,4 +19,5 @@ type Mutation{
 input AddSnapInput{
     text: String!
     userId: ID!
+    createdAt: Date!
 }

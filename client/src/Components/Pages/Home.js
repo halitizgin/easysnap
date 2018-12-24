@@ -35,10 +35,14 @@ class Home extends Component {
         e.preventDefault();
         if (!this.formValidate())
         {
-            addSnap().then(({ data }) => console.log(data));
             this.setState({
                 text: ''
             });
+            addSnap().then(({ data }) => 
+                {
+                    
+                }
+            );
         }
     }
 
@@ -57,6 +61,20 @@ class Home extends Component {
 
     render() {
         const { session } = this.props;
+        const optimisticResponse = {
+            __typename: "Mutation",
+            addSnap: {
+                __typename: "Snap",
+                id: Math.round(Math.random() * -200000),
+                text: this.state.text,
+                createdAt: new Date(),
+                user: {
+                    __typename: "User",
+                    ...session.activeUser
+                }
+            }
+        };
+
         return (
             <div>
                 <div className="description">
@@ -66,9 +84,9 @@ class Home extends Component {
                 <div>
                     <Mutation 
                     mutation={ADD_SNAP} 
-                    variables={ { ...this.state } }
-                    //refetchQueries={[{ query: GET_SNAPS }]}
+                    variables={ { ...this.state, createdAt: new Date() } }
                     update={this.updateCache}
+                    optimisticResponse={ optimisticResponse }
                     >
                         {
                             (addSnap, { loading, error }) => (
@@ -82,7 +100,7 @@ class Home extends Component {
                                     value={this.state.text}
                                     onChange={this.onChange}
                                     placeholder={ session && session.activeUser ? "add snap" : "please login" } 
-                                    disabled={ !(session && session.activeUser) || loading }
+                                    disabled={ !(session && session.activeUser) }
                                     />
                                 </form>
                             )
@@ -101,7 +119,7 @@ class Home extends Component {
                                         <ul className="snaps">
                                             {
                                                 data.snaps.map(snap => (
-                                                    <li key={snap.id}>
+                                                    <li key={snap.id} className={ snap.id < 0 ? 'optimistic' : '' }>
                                                         <div className="title">
                                                         <span className="username">@{ snap.user.username }</span>
                                                         &nbsp;&nbsp;
@@ -109,7 +127,7 @@ class Home extends Component {
                                                         </div>
                                                         <div className="date">
                                                             <span>
-                                                                <TimeAgo date={snap.createdAt} />
+                                                                { snap.id < 0 ? 'sending...' : <TimeAgo date={snap.createdAt} /> }
                                                             </span>
                                                         </div>
                                                     </li>

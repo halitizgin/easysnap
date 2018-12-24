@@ -45,11 +45,12 @@ export const GET_SNAPS = gql`
 `;
 
 export const ADD_SNAP = gql`
-    mutation($text: String!, $userId: ID!) {
+    mutation($text: String!, $userId: ID!, $createdAt: Date!) {
         addSnap(data: 
         { 
             text: $text, 
-            userId: $userId 
+            userId: $userId,
+            createdAt: $createdAt
         }
         ) {
             id
