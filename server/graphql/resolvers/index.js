@@ -3,25 +3,12 @@ const Snap = require('./queries/Snap');
 const User = require('./queries/User');
 
 const Mutation = require('./mutations');
+const Subscription = require('./subscriptions');
 
 module.exports = {
     Query,
     Snap,
     User,
     Mutation,
-    Subscription: {
-        sayi: {
-            subscribe: (parent, args, { pubsub }) => {
-                let sayi = 5;
-
-                setInterval(() => {
-                    sayi += 1;
-                    pubsub.publish('sayi', {
-                        sayi
-                    });
-                }, 3000)
-                return pubsub.asyncIterator('sayi');
-            }
-        }
-    }
+    Subscription
 };
