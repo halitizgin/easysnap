@@ -2,7 +2,8 @@ const { withFilter } = require('apollo-server-express');
 
 module.exports = {
     snapAdded: {
-        subscribe: withFilter((parent, args, { pubsub }) => {
+        subscribe: withFilter(
+            (parent, args, { pubsub }) => {
                 return pubsub.asyncIterator('snapAdded');
             }, 
             (payload, variables) => {

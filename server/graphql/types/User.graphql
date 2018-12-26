@@ -28,3 +28,7 @@ input SignInUserInput{
     username: String!
     password: String!
 }
+
+type Subscription{
+    userAdded: User!
+}

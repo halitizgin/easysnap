@@ -1,7 +1,9 @@
 const snap = require('./snap.subscription');
+const user = require('./user.subscription');
 
 const Subscription = {
-    ...snap
+    ...snap,
+    ...user
 };
 
 module.exports = Subscription;

@@ -6,7 +6,7 @@ import {
   Redirect
 } from 'react-router-dom';
 import Header from './Header';
-import Home from './Pages/Home';
+import Home from './Pages/Home/Home';
 import Login from './Pages/Login';
 import Join from './Pages/Join';
 import Profile from './Pages/Profile';
