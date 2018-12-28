@@ -63,3 +63,26 @@ export const ADD_SNAP = gql`
         }
     }
 `;
+
+export const USER_ADDED = gql`
+    subscription {
+        userAdded {
+            id
+            username
+        }
+    }
+`;
+
+export const SNAP_ADDED = gql`
+    subscription {
+        snapAdded {
+            id
+            text
+            createdAt
+            user {
+                id
+                username
+            }
+        }
+    }
+`;

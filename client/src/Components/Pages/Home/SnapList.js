@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Query } from 'react-apollo';
-import { GET_SNAPS } from '../../../Queries';
+import { GET_SNAPS, SNAP_ADDED } from '../../../Queries';
 import SnapListItem from './SnapListItem';
 
 class SnapList extends Component {
@@ -9,9 +9,30 @@ class SnapList extends Component {
             <div>
                 <Query query={GET_SNAPS}>
                     {
-                        ({ data, loading, error }) => {
+                        ({ data, subscribeToMore, loading, error }) => {
                             if (loading) return <div className="loading">Loading snaps...</div>
                             if (error) return <div>Error!</div>
+
+                            subscribeToMore({
+                                document: SNAP_ADDED,
+                                updateQuery: (prev, { subscriptionData }) => {
+                                    if (!subscriptionData.data) return prev;
+
+                                    const newItem = subscriptionData.data.snapAdded;
+
+                                    if (!prev.snaps.find(snap => snap.id === newItem.id)){
+                                        return {
+                                            ...prev,
+                                            snaps: [newItem, ...prev.snaps]
+                                        }
+                                    }
+                                    else
+                                    {
+                                        return prev;
+                                    }
+                                }
+                            });
+
                             return (
                                 <Fragment>
                                     <ul className="snaps">
